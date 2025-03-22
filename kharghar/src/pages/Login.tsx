@@ -1,47 +1,80 @@
 // src/pages/Login.tsx
 import { motion } from 'framer-motion';
 import GoogleLoginButton from '../components/GoogleLoginButton';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from '../components/Navbar';
 
 export default function Login() {
-  return (
-    <div className="min-h-screen bg-cyber-dark flex items-center justify-center">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-cyber-primary/10 p-8 rounded-xl border border-cyber-primary/20 w-96"
-      >
-        <h2 className="text-3xl font-bold text-cyber-primary mb-8">Sign In</h2>
+    const [user] = useAuthState(auth);
+    const navigate = useNavigate();
+    
+
+    useEffect(() => {
+        if (user) navigate("/dashboard");
         
-        <GoogleLoginButton />
-        
-        <div className="my-6 flex items-center">
-          <div className="flex-1 border-t border-cyber-primary/20"></div>
-          <span className="px-4 text-cyber-primary/80">or</span>
-          <div className="flex-1 border-t border-cyber-primary/20"></div>
+    }, [user, navigate]);
+
+    return (
+        <div className="min-h-screen bg-cyber-dark flex flex-col">
+            <Navbar />
+            
+            <div className="flex flex-1 items-center justify-center">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-cyber-primary/10 p-8 rounded-xl border border-cyber-primary/20 w-96"
+                >
+                    <h2 className="text-3xl font-bold text-cyber-primary mb-8">Sign In</h2>
+                    
+                    <GoogleLoginButton />
+                    
+                    <div className="my-6 flex items-center">
+                        <div className="flex-1 border-t border-cyber-primary/20"></div>
+                        <span className="px-4 text-cyber-primary/80">or</span>
+                        <div className="flex-1 border-t border-cyber-primary/20"></div>
+                    </div>
+
+                    <form className="space-y-6">
+                        <div>
+                            <label className="block text-cyber-primary mb-2">Email</label>
+                            <input
+                                type="email"
+                                className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-cyber-primary mb-2">Password</label>
+                            <input
+                                type="password"
+                                className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
+                            />
+                        </div>
+
+                        <button className="w-full bg-cyber-primary text-cyber-dark py-3 rounded-lg hover:bg-cyber-primary/90 transition">
+                            Sign In
+                        </button>
+                        <p className="text-center text-cyber-primary/80 text-sm">
+                        Already have an account?{' '}
+                        <Link 
+                            to="/signup" 
+                            className="text-cyber-primary hover:text-cyber-primary/90 underline"
+                        >
+                            Sign up here
+                        </Link>
+                    </p>
+
+                    <p className="text-center text-cyber-primary/60 text-xs mt-6">
+                        By continuing, you agree to our{' '}
+                        <a href="#" className="hover:text-cyber-primary underline">Terms of Service</a> and{' '}
+                        <a href="#" className="hover:text-cyber-primary underline">Privacy Policy</a>
+                    </p>
+                    </form>
+                </motion.div>
+            </div>
         </div>
-
-        <form className="space-y-6">
-          <div>
-            <label className="block text-cyber-primary mb-2">Email</label>
-            <input
-              type="email"
-              className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-cyber-primary mb-2">Password</label>
-            <input
-              type="password"
-              className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
-            />
-          </div>
-
-          <button className="w-full bg-cyber-primary text-cyber-dark py-3 rounded-lg hover:bg-cyber-primary/90 transition">
-            Sign In
-          </button>
-        </form>
-      </motion.div>
-    </div>
-  );
+    );
 }

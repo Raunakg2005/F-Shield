@@ -1,6 +1,8 @@
 // src/components/Navbar.tsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
 import { 
   ShieldAlert, 
   LayoutDashboard, 
@@ -14,13 +16,19 @@ import {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const isLoggedIn = false; // Replace with actual auth state
+  const [user] = useAuthState(auth);
 
+  // Define navigation items
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     { name: 'Scan', path: '/scan', icon: <ScanSearch className="w-5 h-5" /> },
     { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },
   ];
+
+  // Logout handler
+  const handleLogout = () => {
+    auth.signOut();
+  };
 
   return (
     <nav className="bg-gray-900 border-b border-cyber-primary/20 sticky top-0 z-50">
@@ -48,26 +56,29 @@ export default function Navbar() {
 
           {/* Auth Section */}
           <div className="hidden md:flex items-center gap-4">
-            {isLoggedIn ? (
+            {user ? (
               <div className="relative">
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-2 text-gray-300 hover:text-cyber-primary transition-colors"
+                  className="flex items-center gap-2 text-gray-300 hover:text-cyber-primary transition-colors focus:outline-none"
                 >
                   <User className="w-5 h-5" />
                   <span>Account</span>
                 </button>
-                
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-cyber-primary/20">
                     <div className="p-2">
                       <Link
                         to="/profile"
                         className="block px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
+                        onClick={() => setIsProfileOpen(false)}
                       >
                         Profile
                       </Link>
-                      <button className="w-full text-left px-4 py-2 text-cyber-alert hover:bg-gray-700 rounded-md">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-cyber-alert hover:bg-gray-700 rounded-md"
+                      >
                         Logout
                       </button>
                     </div>
@@ -95,7 +106,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-gray-300 hover:text-cyber-primary"
+            className="md:hidden text-gray-300 hover:text-cyber-primary focus:outline-none"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -116,18 +127,24 @@ export default function Navbar() {
                   <span>{item.name}</span>
                 </Link>
               ))}
-              
               <div className="pt-4 border-t border-cyber-primary/20">
-                {isLoggedIn ? (
+                {user ? (
                   <div className="space-y-2">
                     <Link
                       to="/profile"
                       className="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-cyber-primary hover:bg-gray-800 rounded-lg"
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       <User className="w-5 h-5" />
                       <span>Profile</span>
                     </Link>
-                    <button className="w-full flex items-center gap-3 px-4 py-2 text-cyber-alert hover:bg-gray-800 rounded-lg">
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2 text-cyber-alert hover:bg-gray-800 rounded-lg"
+                    >
                       Logout
                     </button>
                   </div>
@@ -136,12 +153,14 @@ export default function Navbar() {
                     <Link
                       to="/login"
                       className="col-span-1 text-center px-4 py-2 text-cyber-primary border border-cyber-primary/20 rounded-lg hover:bg-cyber-primary/10"
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       to="/signup"
                       className="col-span-1 text-center px-4 py-2 bg-cyber-primary text-cyber-dark rounded-lg hover:bg-cyber-primary/90"
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       Sign Up
                     </Link>
