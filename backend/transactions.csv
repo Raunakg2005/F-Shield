@@ -1,0 +1,4 @@
+Business_ID,Amount,Vendor_Name,Vendor_Status,Category,Date,Location,Previous_Balance,New_Balance,Fraud_Reason,Payment_Method
+1,2500.50,John's Electronics,Trusted,Electronics,2025-03-22 10:30:00,New York,5000,2500,,Credit Card
+2,150.75,Alice Groceries,Unknown,Groceries,2025-03-21 14:15:00,California,200,49.25,Suspicious Transaction,Cash
+3,1200.00,Best Buy,Trusted,Electronics,2025-03-20 18:45:00,Texas,1500,300,Unauthorized Access,Debit Card

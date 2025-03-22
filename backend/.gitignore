@@ -1,0 +1,46 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+env/
+*.venv
+Pipfile.lock
+
+# Dependency files
+*.egg-info/
+dist/
+build/
+*.log
+
+# Environment variables (important for secrets & config)
+.env
+*.env
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+
+# Database files
+*.sqlite3
+instance/
+migrations/
+
+# Flask-specific
+*.db
+*.pyc
+instance/
+*.bak
+
+# Jupyter notebooks (if used in the project)
+.ipynb_checkpoints/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+firebase-adminsdk.json

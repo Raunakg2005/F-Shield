@@ -1,0 +1,39 @@
+# python.exe -m pip install --upgrade pip
+# from flask import Flask
+# from flask_cors import CORS
+# #from routes import fraud_blueprint
+
+# app = Flask(__name__)
+# CORS(app)  # Enable frontend communication
+
+# # Register routes
+# #app.register_blueprint(fraud_blueprint)
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
+#from models import Transaction, engine, Business  # Ensure correct imports
+
+# @fraud_blueprint.route("/predict", methods=["POST"])
+# def predict():
+#     """Predict fraud for new transactions"""
+#     transactions = request.json["transactions"]
+#     predictions = predict_fraud(transactions)
+#     return jsonify(predictions)
+
+
+Headers
+fetch('http://localhost:5000/add_business', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        business_name: "My Business",
+        business_category: "Retail"
+    })
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+
+Search for changes for firebase
