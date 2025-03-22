@@ -1,11 +1,9 @@
-// src/pages/Login.tsx
 import { motion } from 'framer-motion';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/firebase";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from '../components/Navbar';
 
 export default function Login() {
     const [user] = useAuthState(auth);

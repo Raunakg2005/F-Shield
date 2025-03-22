@@ -1,4 +1,3 @@
-// src/pages/Dashboard.tsx
 import { useState } from 'react';
 import { Activity, AlertTriangle, Shield, BarChart, Search, Filter, Upload } from 'lucide-react';
 import RiskMeter from '../components/RiskMeter';

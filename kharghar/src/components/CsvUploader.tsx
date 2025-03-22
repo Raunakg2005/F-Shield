@@ -1,4 +1,3 @@
-// src/components/CsvUploader.tsx
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
