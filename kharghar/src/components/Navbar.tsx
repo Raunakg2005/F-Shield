@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -21,7 +20,6 @@ export default function Navbar() {
   // Define navigation items
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { name: 'Scan', path: '/scan', icon: <ScanSearch className="w-5 h-5" /> },
     { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },
   ];
 

@@ -1,10 +1,8 @@
-// src/pages/Signup.tsx
 import { motion } from 'framer-motion';
 import { Lock, Mail, User, ShieldAlert } from 'lucide-react';
 import GoogleLoginButton from '../components/GoogleLoginButton';
 import { Link } from 'react-router-dom';
 import { useState as reactUseState } from 'react';
-import Navbar from '../components/Navbar';
 
 function useState<T>(initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
     return reactUseState(initialValue);

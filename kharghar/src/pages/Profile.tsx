@@ -4,7 +4,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/firebase';
 import { signOut } from 'firebase/auth';
 import Loading from '../components/Loading';
-import Navbar from '../components/Navbar';
 
 export default function Profile() {
   const [user] = useAuthState(auth);

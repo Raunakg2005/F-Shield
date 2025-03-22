@@ -1,8 +1,6 @@
-// src/pages/Landing.tsx
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, ArrowRight, Shield, Code } from 'lucide-react';
 import { useState } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function Landing() {

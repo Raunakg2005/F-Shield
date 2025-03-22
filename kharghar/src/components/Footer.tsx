@@ -1,4 +1,3 @@
-// src/components/Footer.tsx
 import { motion } from 'framer-motion';
 import { FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 
