@@ -1,4 +1,3 @@
-// src/pages/Settings.tsx
 import { useState } from 'react';
 import { Shield, Bell, User, Lock, X } from 'lucide-react';
 
@@ -13,6 +12,7 @@ export default function Settings() {
   const [newWhitelist, setNewWhitelist] = useState('');
 
   return (
+    
     <div className="min-h-screen bg-cyber-dark p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-cyber-primary mb-8 flex items-center gap-2">
         <Shield className="w-8 h-8" />

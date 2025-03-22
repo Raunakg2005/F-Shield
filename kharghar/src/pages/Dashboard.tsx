@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Activity, AlertTriangle, Shield, BarChart, Search, Filter, Upload } from 'lucide-react';
 import RiskMeter from '../components/RiskMeter';
 import DataTable from '../components/DataTable';
-import Navbar from '../components/Navbar';
 import CsvUploader from '../components/CsvUploader';
 
 interface Transaction {
@@ -42,7 +41,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-cyber-dark text-gray-100">
-      <Navbar />
 
       <main className="container mx-auto p-6 space-y-8">
         {/* Header Section */}

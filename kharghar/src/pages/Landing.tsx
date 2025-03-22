@@ -33,8 +33,7 @@ export default function Landing() {
 
   return (
     <div className="bg-cyber-dark text-gray-100">
-      {/* Navigation Bar */}
-      <Navbar />
+      
 
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">

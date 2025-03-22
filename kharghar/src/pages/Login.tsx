@@ -18,8 +18,7 @@ export default function Login() {
     }, [user, navigate]);
 
     return (
-        <div className="min-h-screen bg-cyber-dark flex flex-col">
-            <Navbar />
+
             
             <div className="flex flex-1 items-center justify-center">
                 <motion.div 
@@ -75,6 +74,6 @@ export default function Login() {
                     </form>
                 </motion.div>
             </div>
-        </div>
+
     );
 }

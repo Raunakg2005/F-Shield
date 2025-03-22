@@ -30,8 +30,7 @@ export default function Signup() {
     };
 
     return (
-        <div className="min-h-screen bg-cyber-dark flex flex-col">
-                    <Navbar />
+        
         <div className="min-h-screen bg-cyber-dark flex items-center justify-center p-4">
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -153,7 +152,6 @@ export default function Signup() {
                 </form>
             </motion.div>
         </div>
-    </div>
     );
 }
 

@@ -10,6 +10,8 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import AuthGuard from './components/AuthGuard';
 import Loading from './components/Loading';
+import Navbar from './components/Navbar';
+
 
 export default function App() {
   const [user, loading] = useAuthState(auth);
@@ -19,7 +21,7 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-cyber-dark text-gray-100">
-        
+        <Navbar />
         <main className="flex-1">
           <Routes>
             {/* Public Routes */}
