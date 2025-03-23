@@ -1,6 +1,6 @@
 import { Alert } from "../types";
 
-const AlertCard = ({ title, amount, status, reason, date }: Alert) => (
+export const AlertCard = ({ title, amount, status, reason, date }: Alert) => (
   <div className="p-4 bg-gray-900/50 rounded-lg border border-cyber-alert/20 hover:border-cyber-alert/40 transition-colors">
     <div className="flex items-center justify-between">
       <div>

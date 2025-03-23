@@ -11,7 +11,7 @@ function useState<T>(initialValue: T): [T, React.Dispatch<React.SetStateAction<T
 
 export default function Signup() {
     const [passwordStrength, setPasswordStrength] = useState(0);
-    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [errors] = useState<Record<string, string>>({});
 
     const calculatePasswordStrength = (password: string) => {
         let strength = 0;

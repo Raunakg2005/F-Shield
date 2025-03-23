@@ -5,7 +5,6 @@ import { auth } from "../firebase/firebase";
 import { 
   ShieldAlert, 
   LayoutDashboard, 
-  ScanSearch, 
   Settings,
   User,
   Menu,

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Activity, AlertTriangle, Shield, BarChart, Search, Filter } from 'lucide-react';
+import { Activity, AlertTriangle, Search, Filter } from 'lucide-react';
 import RiskMeter from '../components/RiskMeter';
 import DataTable from '../components/DataTable';
 import CsvUploader from '../components/CsvUploader';
