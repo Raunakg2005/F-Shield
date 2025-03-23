@@ -25,7 +25,6 @@ export default function GoogleLoginButton() {
       onClick={handleLogin}
       className="w-full flex items-center justify-center gap-3 bg-white text-cyber-dark py-3 rounded-lg hover:bg-gray-100 transition"
     >
-      {/* Google SVG remains same */}
       Continue with Google
     </button>
   );

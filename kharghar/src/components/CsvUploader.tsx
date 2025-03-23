@@ -11,7 +11,6 @@ const CsvUploader: React.FC<CsvUploaderProps> = ({ onUpload }) => {
   const [error, setError] = useState<string | null>(null);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
 
-  // onDrop generates demo data for now (replace with CSV parsing if needed)
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {

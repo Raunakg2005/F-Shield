@@ -41,7 +41,6 @@ export default function Dashboard() {
     },
   ]);
 
-  // Replace existing transactions with new ones
   const handleFileUpload = (newTransactions: Transaction[]) => {
     setTransactions(newTransactions);
   };
@@ -55,12 +54,10 @@ export default function Dashboard() {
     return matchesSearch && matchesRisk;
   });
 
-  // Update alerts whenever transactions change (derived alerts)
   useEffect(() => {
     const newAlerts = transactions.flatMap(tx => {
       const alertsForTx: Alert[] = [];
 
-      // High Risk Detection
       if (tx.riskLevel === 'high') {
         alertsForTx.push({
           id: `high-risk-${tx.id}`,
@@ -73,7 +70,6 @@ export default function Dashboard() {
         });
       }
 
-      // Geography Mismatch Detection
       if (tx.ipCountry !== tx.vendorCountry) {
         alertsForTx.push({
           id: `geo-${tx.id}`,
@@ -86,7 +82,6 @@ export default function Dashboard() {
         });
       }
 
-      // New Vendor Detection
       if (tx.vendor.includes('New Vendor')) {
         alertsForTx.push({
           id: `vendor-${tx.id}`,
@@ -105,12 +100,10 @@ export default function Dashboard() {
     setAlerts(newAlerts);
   }, [transactions]);
 
-  // Shuffle alerts when the number of transactions changes
   useEffect(() => {
     setAlerts(prevAlerts => [...prevAlerts].sort(() => Math.random() - 0.5));
   }, [transactions.length]);
 
-  // Helper function to calculate average risk score
   const calculateAverageRisk = (transactions: Transaction[]) => {
     const riskValues = {
       low: 20,
@@ -121,7 +114,6 @@ export default function Dashboard() {
     return Math.round(total / transactions.length) || 0;
   };
 
-  // Format the transaction count to display in thousands if needed
   const formatTotalTransactions = (count: number) => {
     return count >= 1000 ? `${Math.floor(count / 1000)}K` : count.toString();
   };
@@ -252,7 +244,6 @@ export default function Dashboard() {
   );
 }
 
-// Reusable Components
 
 const StatCard = ({ title, value, trend, status }: {
   title: string;

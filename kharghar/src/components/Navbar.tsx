@@ -16,13 +16,11 @@ export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user] = useAuthState(auth);
 
-  // Define navigation items
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },
   ];
 
-  // Logout handler
   const handleLogout = () => {
     auth.signOut();
   };

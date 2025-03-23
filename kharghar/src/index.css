@@ -71,7 +71,6 @@ body {
     transparent 100%);
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   background: #0a1a2f;

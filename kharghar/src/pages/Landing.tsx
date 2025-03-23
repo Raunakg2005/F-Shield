@@ -35,7 +35,6 @@ export default function Landing() {
 
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-        {/* Prominent Globe placed slightly above text */}
         <motion.div 
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -47,7 +46,6 @@ export default function Landing() {
           </div>
         </motion.div>
 
-        {/* Headline & CTA */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -126,7 +124,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Trusted By (Testimonials) */}
+      {/*Testimonials*/}
       <section className="py-20 px-6">
         <h2 className="text-4xl font-bold text-center mb-16">Trusted By</h2>
         <div className="flex gap-8 overflow-x-auto pb-8">

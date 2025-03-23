@@ -1,4 +1,3 @@
-// src/types/csv.ts
 export interface TransactionCSV {
     'Transaction Date': string;
     Vendor: string;

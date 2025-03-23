@@ -1,22 +1,16 @@
 import { faker } from '@faker-js/faker';
 
-// New constants for fraud rate configuration
-const BASE_FRAUD_RATE = 0.3; // 30% base rate
-const FRAUD_VARIANCE = 0.15; // ±15% variation
+const BASE_FRAUD_RATE = 0.3; 
+const FRAUD_VARIANCE = 0.15;
 
-// Helper function: randomly shuffles an array
 const shuffle = <T,>(array: T[]): T[] => [...array].sort(() => Math.random() - 0.5);
 
-// Helper function: select a random fraud pattern based on weighted probabilities
 const selectRandomPattern = (patterns: string[], index: number) => {
-  const weights = [0.4, 0.3, 0.2, 0.1]; // Example weights for the first 4 patterns
-  // For simplicity, we use a weighted chance on the modulo of the index
+  const weights = [0.4, 0.3, 0.2, 0.1]; 
   let patternIndex = weights.findIndex((w) => Math.random() < w * ((index % 4) + 1));
   return patterns[patternIndex] || patterns[0];
 };
 
-// Helper function: apply a fraud pattern modification to a transaction
-// Pass the current transactions array to support duplicate-payment
 const applyFraudPattern = (pattern: string, tx: Transaction, transactions: Transaction[]) => {
   switch (pattern) {
     case 'duplicate-payment':
@@ -31,13 +25,11 @@ const applyFraudPattern = (pattern: string, tx: Transaction, transactions: Trans
         to: '2024-03-02T05:00:00Z'
       }).toISOString();
       break;
-    // Add additional pattern cases as needed...
     default:
       break;
   }
 };
 
-// Updated Transaction interface with additional fields
 export interface Transaction {
   id: string;
   date: string;
@@ -50,30 +42,23 @@ export interface Transaction {
   timeSinceLast: number;
 }
 
-// Modified calculateRiskLevel function with randomized thresholds
 const calculateRiskLevel = (tx: Transaction): 'low' | 'medium' | 'high' => {
   let riskScore = 0;
 
-  // Amount scoring
   if (tx.amount > 10000) riskScore += 40;
   else if (tx.amount > 5000) riskScore += 20;
 
-  // Vendor scoring
   if (tx.vendor.includes('Unknown') || tx.vendor.includes('New Vendor')) riskScore += 30;
 
-  // Geography scoring
   if (tx.ipCountry !== tx.vendorCountry) riskScore += 25;
 
-  // Timing scoring
   if (tx.timeSinceLast < 60) riskScore += 35;
 
-  // Category scoring
   if (tx.category === 'Cryptocurrency') riskScore += 30;
 
-  // Randomized thresholds
   const randomizedThresholds = {
-    high: 70 + Math.random() * 10,  // between 70 and 80
-    medium: 40 + Math.random() * 15 // between 40 and 55
+    high: 70 + Math.random() * 10, 
+    medium: 40 + Math.random() * 15 
   };
 
   if (riskScore > randomizedThresholds.high) return 'high';
@@ -81,7 +66,6 @@ const calculateRiskLevel = (tx: Transaction): 'low' | 'medium' | 'high' => {
   return 'low';
 };
 
-// Modified generateDemoData function
 const generateDemoData = (): Transaction[] => {
   const transactions: Transaction[] = [];
   const fraudPatterns = shuffle([
@@ -93,11 +77,9 @@ const generateDemoData = (): Transaction[] => {
     'after-hours-activity'
   ]);
 
-  // Randomize fraud rate between 15-45%
   const fraudRate = BASE_FRAUD_RATE + (Math.random() * FRAUD_VARIANCE * 2 - FRAUD_VARIANCE);
   const totalFraud = Math.floor(1000 * fraudRate);
 
-  // Reset faker seed for unique values each upload
   faker.seed(Date.now());
 
   for (let i = 0; i < 1000; i++) {
@@ -115,14 +97,13 @@ const generateDemoData = (): Transaction[] => {
       date,
       vendor,
       amount: parseFloat(amount.toFixed(2)),
-      riskLevel: 'low', // temporary, will update below
+      riskLevel: 'low', 
       category,
       ipCountry,
       vendorCountry,
       timeSinceLast,
     };
 
-    // Mark first totalFraud transactions as fraudulent
     const isFraud = i < totalFraud;
     if (isFraud) {
       const pattern = selectRandomPattern(fraudPatterns, i);
@@ -141,7 +122,6 @@ const generateDemoData = (): Transaction[] => {
         case 'category-anomaly':
           category = 'Cryptocurrency';
           break;
-        // For patterns handled in applyFraudPattern:
         case 'duplicate-payment':
         case 'after-hours-activity':
           applyFraudPattern(pattern, tx, transactions);
@@ -150,7 +130,6 @@ const generateDemoData = (): Transaction[] => {
           break;
       }
     }
-    // Update transaction fields after modifications
     tx.amount = parseFloat(amount.toFixed(2));
     tx.vendor = vendor;
     tx.category = category;
@@ -162,7 +141,6 @@ const generateDemoData = (): Transaction[] => {
     transactions.push(tx);
   }
 
-  // Add guaranteed fraud alerts with fixed values
   for (let i = 0; i < 10; i++) {
     transactions.push({
       id: `fraud-${i}`,

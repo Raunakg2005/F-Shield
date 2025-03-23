@@ -16,8 +16,6 @@ export default function Login() {
     }, [user, navigate]);
 
     return (
-
-            
             <div className="flex flex-1 items-center justify-center">
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
@@ -72,6 +70,5 @@ export default function Login() {
                     </form>
                 </motion.div>
             </div>
-
     );
 }
