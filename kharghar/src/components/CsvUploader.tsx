@@ -75,7 +75,7 @@ const CsvUploader: React.FC<CsvUploaderProps> = ({ onUpload }) => {
                   onClick={handleGenerateDemo}
                   className="px-4 py-2 bg-cyber-primary text-cyber-dark rounded-lg hover:bg-cyber-primary/90 transition"
                 >
-                  Generate Demo Data
+                  Generate Data
                 </button>
               </div>
             </>
