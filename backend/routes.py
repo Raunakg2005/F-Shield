@@ -96,18 +96,17 @@ def get_business():
 
 @routes.route("/login_user", methods=["POST"])
 def login_user():
-  
     session = SessionLocal()
     
     try:
-       
+        # Decoding the token
         decoded_token, error_response = verify_firebase_token()
         if error_response:
             return error_response  # If token is invalid, return error
 
         firebase_uid = decoded_token["uid"]
 
-        # Get data from request
+        # Get data from the request
         data = request.json
         business_email = data.get("business_email")  # Ensure the frontend sends this
 
@@ -127,12 +126,13 @@ def login_user():
         return jsonify({"message": "Firebase UID updated successfully"}), 200
 
     except Exception as e:
+        # Log the exception for debugging
+        logging.error(f"Error occurred while updating Firebase UID: {str(e)}")
         session.rollback()
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
     finally:
         session.close()  # Close the session
-
 @routes.route("/edit_business", methods=["POST"])
 def edit_business():
     data = request.json  # Get JSON data from request
@@ -157,6 +157,15 @@ def edit_business():
         business.business_name = data["new_name"]
         
 
+        new_business = Business(
+            business_name=data["business_name"],
+            business_category=data["business_category"],
+            business_email=data["business_email"],
+            firebase_uid=data["firebase_uid"],
+            total_transact=0,
+            risk=0,
+            risk_score=0
+        )
 
         session.commit()
         return jsonify({
