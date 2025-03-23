@@ -1,46 +1,133 @@
-import { useState } from 'react';
-import { Activity, AlertTriangle, Shield, BarChart, Search, Filter, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Activity, AlertTriangle, Shield, BarChart, Search, Filter } from 'lucide-react';
 import RiskMeter from '../components/RiskMeter';
 import DataTable from '../components/DataTable';
 import CsvUploader from '../components/CsvUploader';
+import { Transaction } from '../types';
 
-interface Transaction {
+interface Alert {
   id: string;
+  transactionId: string;
+  title: string;
+  amount: string;
   date: string;
-  vendor: string;
-  amount: number;
-  riskLevel: 'low' | 'medium' | 'high';
+  reason: string;
+  status: 'Critical' | 'Warning';
 }
 
 export default function Dashboard() {
   const [timeFilter, setTimeFilter] = useState('30d');
   const [searchQuery, setSearchQuery] = useState('');
   const [riskFilter, setRiskFilter] = useState('all');
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    { id: '1', date: '2024-03-01', vendor: 'CloudSecure Inc', amount: 2500, riskLevel: 'low' },
-    { id: '2', date: '2024-03-05', vendor: 'Unknown Vendor', amount: 15000, riskLevel: 'high' },
-    { id: '3', date: '2024-03-06', vendor: 'OfficeSupply Co', amount: 450, riskLevel: 'medium' },
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>([
+    {
+      id: 'A1',
+      title: 'Unverified Vendor Payment',
+      amount: '$15,000',
+      date: new Date().toISOString(),
+      reason: 'Manual review required',
+      status: 'Critical',
+      transactionId: ''
+    },
+    {
+      id: 'A2',
+      title: 'Duplicate Transaction',
+      amount: '$2,500',
+      date: new Date().toISOString(),
+      reason: 'Possible duplicate',
+      status: 'Warning',
+      transactionId: ''
+    },
   ]);
 
-  const alerts = [
-    { id: 'A1', title: 'Unverified Vendor Payment', amount: '$15,000', status: 'Critical' },
-    { id: 'A2', title: 'Duplicate Transaction', amount: '$2,500', status: 'Warning' },
-  ];
-
+  // Replace existing transactions with new ones
   const handleFileUpload = (newTransactions: Transaction[]) => {
-    setTransactions([...transactions, ...newTransactions]);
+    setTransactions(newTransactions);
   };
 
   const filteredTransactions = transactions.filter(tx => {
-    const matchesSearch = tx.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tx.amount.toString().includes(searchQuery);
+    const matchesSearch =
+      tx.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tx.amount.toString().includes(searchQuery) ||
+      (tx.category && tx.category.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesRisk = riskFilter === 'all' || tx.riskLevel === riskFilter;
     return matchesSearch && matchesRisk;
   });
 
+  // Update alerts whenever transactions change (derived alerts)
+  useEffect(() => {
+    const newAlerts = transactions.flatMap(tx => {
+      const alertsForTx: Alert[] = [];
+
+      // High Risk Detection
+      if (tx.riskLevel === 'high') {
+        alertsForTx.push({
+          id: `high-risk-${tx.id}`,
+          transactionId: tx.id,
+          title: 'High Risk Transaction',
+          amount: `$${tx.amount.toLocaleString()}`,
+          date: tx.date,
+          reason: 'High risk score based on transaction patterns',
+          status: 'Critical'
+        });
+      }
+
+      // Geography Mismatch Detection
+      if (tx.ipCountry !== tx.vendorCountry) {
+        alertsForTx.push({
+          id: `geo-${tx.id}`,
+          transactionId: tx.id,
+          title: 'Geography Mismatch',
+          amount: `$${tx.amount.toLocaleString()}`,
+          date: tx.date,
+          reason: `IP Country (${tx.ipCountry}) ≠ Vendor Country (${tx.vendorCountry})`,
+          status: 'Warning'
+        });
+      }
+
+      // New Vendor Detection
+      if (tx.vendor.includes('New Vendor')) {
+        alertsForTx.push({
+          id: `vendor-${tx.id}`,
+          transactionId: tx.id,
+          title: 'New Vendor Transaction',
+          amount: `$${tx.amount.toLocaleString()}`,
+          date: tx.date,
+          reason: 'First transaction with this vendor',
+          status: 'Critical'
+        });
+      }
+
+      return alertsForTx;
+    });
+
+    setAlerts(newAlerts);
+  }, [transactions]);
+
+  // Shuffle alerts when the number of transactions changes
+  useEffect(() => {
+    setAlerts(prevAlerts => [...prevAlerts].sort(() => Math.random() - 0.5));
+  }, [transactions.length]);
+
+  // Helper function to calculate average risk score
+  const calculateAverageRisk = (transactions: Transaction[]) => {
+    const riskValues = {
+      low: 20,
+      medium: 50,
+      high: 80
+    };
+    const total = transactions.reduce((acc, tx) => acc + riskValues[tx.riskLevel], 0);
+    return Math.round(total / transactions.length) || 0;
+  };
+
+  // Format the transaction count to display in thousands if needed
+  const formatTotalTransactions = (count: number) => {
+    return count >= 1000 ? `${Math.floor(count / 1000)}K` : count.toString();
+  };
+
   return (
     <div className="min-h-screen bg-cyber-dark text-gray-100">
-
       <main className="container mx-auto p-6 space-y-8">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start">
@@ -55,13 +142,13 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard 
             title="Total Transactions" 
-            value={transactions.length.toString()} 
+            value={formatTotalTransactions(transactions.length)} 
             trend="↑ 12%" 
             status="positive"
           />
           <StatCard 
             title="High Risk Alerts" 
-            value={alerts.length.toString()} 
+            value={alerts.filter(a => a.status === 'Critical').length.toString()} 
             status="critical"
           />
           <StatCard 
@@ -118,8 +205,6 @@ export default function Dashboard() {
               <option value="low">Low</option>
             </select>
           </div>
-
-          
         </div>
 
         {/* Combined Content */}
@@ -167,18 +252,8 @@ export default function Dashboard() {
   );
 }
 
-// Helper functions
-const calculateAverageRisk = (transactions: Transaction[]) => {
-  const riskValues = {
-    low: 20,
-    medium: 50,
-    high: 80
-  };
-  const total = transactions.reduce((acc, tx) => acc + riskValues[tx.riskLevel], 0);
-  return Math.round(total / transactions.length) || 0;
-};
-
 // Reusable Components
+
 const StatCard = ({ title, value, trend, status }: {
   title: string;
   value: string;
@@ -217,16 +292,20 @@ const SectionHeader = ({ icon, title, subtitle, status }: {
   </div>
 );
 
-const AlertCard = ({ title, amount, status }: {
+const AlertCard = ({ title, amount, status, date, reason }: {
   title: string;
   amount: string;
   status: string;
+  date: string;
+  reason: string;
 }) => (
   <div className="p-4 bg-gray-900/50 rounded-lg border border-cyber-alert/20 hover:border-cyber-alert/40 transition-colors">
     <div className="flex items-center justify-between">
       <div>
         <h3 className="text-cyber-alert font-medium">{title}</h3>
         <p className="text-sm text-gray-400 mt-1">{amount}</p>
+        <p className="text-xs text-gray-500">{date}</p>
+        <p className="text-xs text-gray-500">{reason}</p>
       </div>
       <div className="flex items-center gap-3">
         <span className="px-3 py-1 bg-cyber-alert/10 text-cyber-alert text-sm rounded-full">
