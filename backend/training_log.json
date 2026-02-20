@@ -1,0 +1,39 @@
+{
+  "trained_at": "2026-02-20T14:29:18.717628Z",
+  "model_path": "D:\\D\\projects\\kharghar hacks\\backend\\fraud_pipeline.pkl",
+  "split": "stratified random 70/15/15",
+  "calibration": "isotonic (cv=prefit)",
+  "cv_roc_auc": {
+    "mean": 0.9976,
+    "std": 0.0006
+  },
+  "threshold": 0.25,
+  "feature_cols": [
+    "amount",
+    "hour_of_day",
+    "day_of_week",
+    "time_since_last_txn",
+    "num_txns_last_1h",
+    "num_txns_last_24h",
+    "amount_vs_avg_ratio",
+    "country_mismatch",
+    "high_risk_country",
+    "is_crypto_category",
+    "is_new_vendor",
+    "vendor_risk_score",
+    "payment_method_encoded",
+    "balance_drop_ratio",
+    "round_amount",
+    "is_after_hours"
+  ],
+  "val_metrics": {
+    "roc_auc": 0.9979,
+    "pr_auc": 0.9914,
+    "f1": 0.9636
+  },
+  "test_metrics": {
+    "roc_auc": 0.9969,
+    "pr_auc": 0.9878,
+    "f1": 0.9584
+  }
+}

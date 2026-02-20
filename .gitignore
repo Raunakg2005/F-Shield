@@ -1,0 +1,55 @@
+# Node / React Frontend (Kharghar dir)
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+dist/
+build/
+*.log
+
+# Databases & SQLite
+*.sqlite3
+*.db
+instance/
+
+# Flask & FastAPI
+.webassets-cache
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+firebase-adminsdk.json
+*firebase-adminsdk*.json
+
+# Ignore datasets/CSV files (large & sensitive)
+*.csv
+
+# OS specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.sublime-workspace

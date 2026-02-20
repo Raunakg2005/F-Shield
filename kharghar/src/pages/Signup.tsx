@@ -1,17 +1,19 @@
 import { motion } from 'framer-motion';
-import { Lock, Mail, User, ShieldAlert } from 'lucide-react';
+import { Lock, Mail, User, Shield, ArrowRight } from 'lucide-react';
 import GoogleLoginButton from '../components/GoogleLoginButton';
-import { Link } from 'react-router-dom';
-import { useState as reactUseState } from 'react';
-
-function useState<T>(initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
-    return reactUseState(initialValue);
-    
-}
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase/firebase';
 
 export default function Signup() {
     const [passwordStrength, setPasswordStrength] = useState(0);
-    const [errors] = useState<Record<string, string>>({});
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const calculatePasswordStrength = (password: string) => {
         let strength = 0;
@@ -22,133 +24,179 @@ export default function Signup() {
         return strength;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
+        setLoading(true);
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            navigate('/dashboard');
+        } catch (err: any) {
+            setError(err.message || 'Failed to create account');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        
-        <div className="min-h-screen bg-cyber-dark flex items-center justify-center p-4">
-            <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-cyber-dark-secondary p-8 rounded-xl border border-cyber-primary/20 w-full max-w-md"
-            >
-                <div className="text-center mb-8">
-                    <ShieldAlert className="w-12 h-12 text-cyber-primary mx-auto mb-4" />
-                    <h2 className="text-3xl font-bold text-cyber-primary mb-2">
-                        Create Secure Account
-                    </h2>
-                    <p className="text-cyber-primary/80">
-                        Protect your business from financial fraud
-                    </p>
+        <div className="min-h-screen bg-[#030712] text-gray-100 flex flex-row-reverse pb-safe">
+            {/* Right Panel - Visual/Brand (Hidden on Mobile) */}
+            <div className="hidden lg:flex flex-1 relative bg-[#05080c] border-l border-white/5 p-12 flex-col justify-between overflow-hidden">
+                {/* Abstract Background */}
+                <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyber-primary/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTAgNDBMMDAgMEw0MCAwIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMSkiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4=')] opacity-50 z-0" />
+
+                <div className="relative z-10 flex items-center justify-end gap-3 w-full">
+                    <span className="text-2xl font-bold tracking-tight text-white">Fraud<span className="text-cyber-primary">Sense</span></span>
+                    <Shield className="w-8 h-8 text-cyber-primary" />
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label className="block text-cyber-primary mb-2 flex items-center gap-2">
-                            <User className="w-5 h-5" />
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
-                            placeholder="enter full name"
-                        />
-                        {errors.name && <p className="text-cyber-alert text-sm mt-1">{errors.name}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-cyber-primary mb-2 flex items-center gap-2">
-                            <Mail className="w-5 h-5" />
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
-                            placeholder="enter email address"
-                        />
-                        {errors.email && <p className="text-cyber-alert text-sm mt-1">{errors.email}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-cyber-primary mb-2 flex items-center gap-2">
-                            <Lock className="w-5 h-5" />
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
-                            placeholder="enter ur password"
-                            onChange={(e) => setPasswordStrength(calculatePasswordStrength(e.target.value))}
-                        />
-                        <div className="mt-2 flex gap-1">
-                            {[...Array(4)].map((_, i) => (
-                                <div
-                                    key={i}
-                                    className={`h-1 flex-1 rounded-full ${
-                                        i < passwordStrength ? 'bg-cyber-primary' : 'bg-cyber-primary/20'
-                                    }`}
-                                />
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-cyber-primary mb-2 flex items-center gap-2">
-                            <Lock className="w-5 h-5" />
-                            Confirm Password
-                        </label>
-                        <input
-                            type="password"
-                            className="w-full p-3 bg-cyber-dark rounded-lg border border-cyber-primary/20 text-cyber-primary"
-                            placeholder="re-enter ur password"
-                        />
-                        {errors.password && <p className="text-cyber-alert text-sm mt-1">{errors.password}</p>}
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="w-full bg-cyber-primary text-cyber-dark py-3 rounded-lg font-semibold
-                            hover:bg-cyber-primary/90 transition-colors"
+                <div className="relative z-10 max-w-lg mb-12 ml-auto text-right">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
                     >
-                        Create Secure Account
-                    </button>
+                        <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-6">
+                            Start securing your <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-l from-white to-gray-500">payments today.</span>
+                        </h1>
+                        <p className="text-gray-400 text-lg leading-relaxed mb-8">
+                            Join leading fintechs preventing collateral damage using our multi-stage architecture.
+                        </p>
+                    </motion.div>
 
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-cyber-primary/20"></div>
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="flex flex-col gap-4 items-end"
+                    >
+                        {['Sub-50ms rule engine processing', 'Network topology clustering', 'XGBoost with SHAP logs'].map((item, i) => (
+                            <div key={i} className="flex items-center gap-3 bg-gray-900/40 border border-gray-800 py-3 px-5 rounded-full backdrop-blur-md">
+                                <span className="text-sm font-medium text-gray-300">{item}</span>
+                                <div className="w-2 h-2 rounded-full bg-cyber-primary" />
+                            </div>
+                        ))}
+                    </motion.div>
+                </div>
+            </div>
+
+            {/* Left Panel - Signup Form */}
+            <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12 relative z-10 w-full">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full max-w-sm"
+                >
+                    {/* Mobile Logo */}
+                    <div className="flex lg:hidden items-center justify-center gap-2 mb-12">
+                        <Shield className="w-8 h-8 text-cyber-primary" />
+                        <span className="text-3xl font-bold tracking-tight text-white">Fraud<span className="text-cyber-primary">Sense</span></span>
+                    </div>
+
+                    <div className="mb-8 text-center lg:text-left">
+                        <h2 className="text-3xl font-bold mb-2">Create Account</h2>
+                        <p className="text-gray-400">Scale securely without friction.</p>
+                    </div>
+
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                        {error && (
+                            <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm">
+                                {error}
+                            </div>
+                        )}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Jane Doe"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="w-full pl-11 pr-4 py-3 bg-[#0a0f16] border border-gray-800 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyber-primary focus:ring-1 focus:ring-cyber-primary/50 transition-colors"
+                                    required
+                                />
+                                <User className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            </div>
                         </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-cyber-dark-secondary text-cyber-primary/80">
-                                Or continue with
-                            </span>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1.5">Work Email</label>
+                            <div className="relative">
+                                <input
+                                    type="email"
+                                    placeholder="name@company.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full pl-11 pr-4 py-3 bg-[#0a0f16] border border-gray-800 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyber-primary focus:ring-1 focus:ring-cyber-primary/50 transition-colors"
+                                    required
+                                />
+                                <Mail className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            </div>
                         </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-1.5">Password</label>
+                            <div className="relative">
+                                <input
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        setPasswordStrength(calculatePasswordStrength(e.target.value));
+                                    }}
+                                    className="w-full pl-11 pr-4 py-3 bg-[#0a0f16] border border-gray-800 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-cyber-primary focus:ring-1 focus:ring-cyber-primary/50 transition-colors"
+                                    required
+                                />
+                                <Lock className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            </div>
+                            {/* Strength Indicator */}
+                            <div className="mt-2 flex gap-1">
+                                {[...Array(4)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={`h-1 flex-1 rounded-full overflow-hidden transition-all duration-300 ${i < passwordStrength
+                                            ? passwordStrength < 2 ? 'bg-red-500' : passwordStrength < 4 ? 'bg-yellow-500' : 'bg-cyber-primary'
+                                            : 'bg-gray-800'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full px-4 py-3 bg-white text-black font-semibold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mt-6 shadow-[0_0_20px_rgba(255,255,255,0.1)] disabled:opacity-50"
+                        >
+                            {loading ? 'Creating...' : 'Create Account'} {!loading && <ArrowRight className="w-4 h-4" />}
+                        </button>
+                    </form>
+
+                    <div className="my-6 flex items-center">
+                        <div className="flex-1 border-t border-gray-800"></div>
+                        <span className="px-4 text-sm text-gray-500">Or sign up with</span>
+                        <div className="flex-1 border-t border-gray-800"></div>
                     </div>
 
                     <div className="space-y-3">
                         <GoogleLoginButton />
-                        
                     </div>
 
-                    <p className="text-center text-cyber-primary/80 text-sm">
+                    <p className="text-center text-sm text-gray-400 mt-8">
                         Already have an account?{' '}
-                        <Link 
-                            to="/login" 
-                            className="text-cyber-primary hover:text-cyber-primary/90 underline"
-                        >
-                            Sign in here
+                        <Link to="/login" className="text-white font-medium hover:text-cyber-primary transition-colors">
+                            Sign in
                         </Link>
                     </p>
-
-                    <p className="text-center text-cyber-primary/60 text-xs mt-6">
-                        By continuing, you agree to our{' '}
-                        <a href="#" className="hover:text-cyber-primary underline">Terms of Service</a> and{' '}
-                        <a href="#" className="hover:text-cyber-primary underline">Privacy Policy</a>
+                    <p className="text-center text-xs text-gray-600 mt-6 max-w-xs mx-auto">
+                        By joining, you agree to our Terms of Service and Privacy Policy.
                     </p>
-                </form>
-            </motion.div>
+                </motion.div>
+            </div>
         </div>
     );
 }
-

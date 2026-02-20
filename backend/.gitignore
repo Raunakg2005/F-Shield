@@ -44,3 +44,5 @@ instance/
 .DS_Store
 Thumbs.db
 firebase-adminsdk.json
+.env.example
+node_modules/
